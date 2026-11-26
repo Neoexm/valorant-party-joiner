@@ -244,6 +244,18 @@ class WorkerTests(unittest.TestCase):
                 self.assertEqual(delays, [])
                 self.assertEqual(len(client.join_calls), 1)
 
+    def test_join_party_got_blocked_stops_and_preserves_error_code(self):
+        client = ScriptedClient(
+            [joiner.Party(BASE, "", True)],
+            [joiner.ApiError(400, "JOIN_PARTY_GOT_BLOCKED")],
+        )
+        result, _, delays = self.run_worker(client)
+        self.assertEqual(result.status, "error")
+        self.assertIn("JOIN_PARTY_GOT_BLOCKED", result.message)
+        self.assertEqual(result.attempts, 1)
+        self.assertEqual(client.join_calls, [("join", CODE)])
+        self.assertEqual(delays, [])
+
     def test_remote_join_403_party_full_retries_then_stops_on_success(self):
         client = ScriptedClient(
             [joiner.Party(BASE, "", True), joiner.Party(BASE, "", True), joiner.Party(TARGET, "", True)],

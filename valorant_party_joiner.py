@@ -486,6 +486,8 @@ class JoinWorker:
                             return Result("error", "Riot still rejected the refreshed session. Restart the game and try again.", attempts)
                         self.client.invalidate_auth()
                         self.emit("log", "Refreshing authentication from Riot Client.")
+                    elif error.code == "JOIN_PARTY_GOT_BLOCKED":
+                        return Result("error", f"{label}: {error}. Riot blocked the join; retries stopped.", attempts)
                     elif error.status == 403 and error.code == "PARTY_FULL" and stage == "join" and not error.local:
                         delay = retry_delay(error.retry_after, interval)
                         minimum = delay if error.retry_after is not None else 0
