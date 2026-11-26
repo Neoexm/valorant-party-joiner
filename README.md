@@ -1,6 +1,6 @@
 # valorant party joiner
 
-A small Windows app that retries a party code using your running Riot Client session. It stops once your membership is confirmed.
+A small Windows app that retries a party code using your running Riot Client session. It stops once you join the party
 
 ## Running it
 
